@@ -1,0 +1,89 @@
+
+from twitter import *
+from time import sleep
+import sys
+import csv
+import pandas as pd
+
+#latitude = 51.474144    # geographical centre of search
+#longitude = -0.035401    # geographical centre of search
+max_range = 5        # search range in kilometres
+num_results = 5    # minimum results to obtain
+
+latitude = 23.246789    # geographical centre of search
+longitude = 77.425795
+
+#-----------------------------------------------------------------------
+# load our API credentials
+#-----------------------------------------------------------------------
+import sys
+sys.path.append(".")
+import config
+### research
+consumer_key =
+consumer_secret =
+access_key =
+access_secret =
+
+
+#-----------------------------------------------------------------------
+# create twitter API object
+#-----------------------------------------------------------------------
+twitter = Twitter(auth = OAuth(access_key,
+                  access_secret,
+                  consumer_key,
+                  consumer_secret), retry=True)
+
+
+
+#-----------------------------------------------------------------------
+# add headings
+#-----------------------------------------------------------------------
+row = [ "user", "text", "latitude", "longitude" , "Created at"]
+#-----------------------------------------------------------
+
+main_df = pd.DataFrame(columns = row)
+
+
+
+
+last_id = None
+
+
+
+for i in list_of_tuples[0:5]: 
+    result_count = 0
+    while result_count <  num_results:
+     
+        #if result_count%10==0:
+            #sleep()
+        query = twitter.search.tweets(q = "", lang = "en", geocode = "%f,%f,%dkm" % (latitude, longitude, max_range), count = 1000, max_id = last_id , since = "04-04-2020")
+        for result in query["statuses"]:
+            
+            #if result["geo"]:
+                main_df = main_df.append({"user" : result["user"]["screen_name"]}, ignore_index = True)
+                main_df['text'][ main_df["user"]==result["user"]["screen_name"]] = result["text"]
+                main_df['latitude'][ main_df["user"]==result["user"]["screen_name"]]= latitude
+                main_df['longitude'][ main_df["user"]==result["user"]["screen_name"]]=longitude
+                main_df['Created at'][ main_df["user"]==result["user"]["screen_name"]]=result["created_at"]
+    
+                
+                result_count += 1
+                print(result_count)
+                last_id = result["id"]
+
+
+
+
+from csv import reader
+# open file in read mode
+with open('C://Users//Pragya Jain//Downloads//341_points.csv', 'r') as read_obj:
+    # pass the file object to reader() to get the reader object
+    csv_reader = reader(read_obj)
+    # Get all rows of csv from csv_reader object as list of tuples
+    list_of_tuples = list(map(tuple, csv_reader))
+    # display all rows of csv
+    print(list_of_tuples)
+
+
+
