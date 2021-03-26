@@ -1,0 +1,70 @@
+
+@author: pragyaja
+"""
+
+import pandas as pd
+
+data = pd.read_csv('C://Users//pragyaja//Downloads//check12195.csv')
+
+#data1 = data.drop_duplicates()     # same data
+
+
+from google_trans_new import google_translator  
+translator = google_translator()  
+
+translator.translate(error_result['VIRHEILMOITUS'])
+
+#translate_text = translator.translate('สวัสดีจีน',lang_tgt='en')  
+#print(translate_text)
+
+from langdetect import detect
+
+#lang = detect("Hello World")
+
+lang = []
+for i in data['full_text']:
+    try:
+        lang.append(detect(i))
+    except:
+        lang.append("Cant find the language")
+        continue
+    
+data1 = data
+    
+
+data1['language'] = lang
+
+
+#data1.to_csv("file1.csv")
+
+hindi =  data1[data1['language']== "hi"]
+
+english = data1[data1['language']== "en"]
+
+no_lang = data1[data1['language']== "Cant find the language"]
+
+#hidont_know =  data1[data1['language'] != "en" || data1['language'] !="hi" ]
+
+hindi_to_english = []
+
+count = 0
+for i in hindi['full_text']:
+    hindi_to_english.append(translator.translate(i,lang_tgt='en'))
+    count = count+1
+    print(count)
+    
+
+     
+hindi['Translated_to_english'] = hindi_to_english
+
+text = list(english['full_text']) + hindi_to_english
+
+
+text.to_csv("text.csv")
+
+hindi.to_csv('hindi_final.csv')
+
+
+        
+
+
